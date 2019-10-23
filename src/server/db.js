@@ -1,8 +1,9 @@
 'use strict';
 
 import SimpleSchema from 'simpl-schema';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectID } from 'mongodb';
 import { config } from './config';
+import { NotFoundError } from './utils/errors';
 
 
 // validate config
@@ -43,9 +44,17 @@ const stopReconnectTimer = () => {
 //=========================== Exports =========================================
 //=============================================================================
 
+export { ObjectID };
+export const client = () => _client;
+export const dbName = settings.name;
+export const db = (name = dbName) => _client.db(name);
 
-export const db = () => _db;
-export const collection = (...args) => _db.collection(...args);
+export const ensureCollection = (dbName, name) => new Promise((resolve, reject) => {
+	db(dbName).collection(name, { strict: true }, (err, collection) => {
+		if (!err) { resolve(collection) }
+		else      { reject(/not exist/.test(err.message) ? new NotFoundError() : err) }
+	});
+});
 
 export const dropCollection = async collection => {
 	try { await collection.drop() }

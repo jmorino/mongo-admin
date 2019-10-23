@@ -15,6 +15,27 @@ export const handleObject = callback => async (req, res, next) => {
 
 //=================================================================================================================
 
+export const handlePaginatedObject = callback => async (req, res, next) => {
+	try {
+		const { start, end, total, items } = await callback(req);
+
+		// ensure response validity
+		if (start == null || end == null || total == null || items == null) { throw new Error('Invalid pagination structure') }
+
+		// set specific headers
+		res.set({
+			'Access-Control-Expose-Headers' : 'Content-Range',
+			'Content-Range' : `items ${start}-${end}/${total}`
+		});
+
+		// send response
+		res.json(items);
+	}
+	catch(err) { next(err) }
+}
+
+//=================================================================================================================
+
 export const handleRawResponse = callback => async (req, res, next) => {
 	try { await callback(req, res, next) }
 	catch(err) { next(err) }
