@@ -1,5 +1,5 @@
 {
-  "name": "mevn",
+  "name": "mongo-admin",
   "version": "0.0.0",
   "scripts": {
     "clean": "rm -rf dist",
