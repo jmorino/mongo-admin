@@ -2,9 +2,9 @@
 <v-navigation-drawer app clipped class="pa-0">
 	<div class="d-flex flex-column overflow-hidden fill-height">
 		<v-toolbar dense flat dark color="secondary" class="flex-shrink-1">
-			<v-toolbar-title class="subtitle-1">Collections ({{collections.length}})</v-toolbar-title>
+			<v-toolbar-title class="subtitle-2">Collections ({{collections.length}})</v-toolbar-title>
 			<v-spacer />
-			<v-btn icon small><v-icon>mdi-plus</v-icon></v-btn>
+			<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
 		</v-toolbar>
 		<div class="flex-grow-1 overflow-auto">
 			<v-list nav dense>
