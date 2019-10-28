@@ -1,8 +1,10 @@
 <template>
 	<div>
-		<div class="caption d-inline-flex flex-shrink-1 align-self-center">{{ pageRangeMin + 1 }} - {{ pageRangeMax }} sur {{ total }}</div>
 		<v-btn small icon :disabled="isFirst" @click="prev">
 			<v-icon :color="color" :size="size">mdi-chevron-left</v-icon>
+		</v-btn>
+		<v-btn text class="caption text-lowercase">
+			<div>{{ pageRangeMin + 1 }} - {{ pageRangeMax }} sur {{ total }}</div>
 		</v-btn>
 		<v-btn small icon :disabled="isLast" @click="next">
 			<v-icon :color="color" :size="size">mdi-chevron-right</v-icon>

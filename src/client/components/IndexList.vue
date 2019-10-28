@@ -5,6 +5,8 @@
 			<v-card>
 				<v-toolbar dense flat color="grey lighten-2">
 					<v-toolbar-title class="subtitle-2">Indexes ({{ indexCount }})</v-toolbar-title>
+					<v-spacer />
+					<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
 				</v-toolbar>
 				<v-divider />
 				<v-simple-table>

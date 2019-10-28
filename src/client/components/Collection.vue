@@ -1,18 +1,19 @@
 <template>
-<v-container fluid>
-	<div class="text-end">
+<v-container fluid class="pt-0">
+	<!-- <div class="text-end">
 		<v-btn depressed color="primary"><v-icon small>mdi-plus</v-icon>document</v-btn>
 		<v-btn depressed color="secondary"><v-icon small>mdi-plus</v-icon>index</v-btn>
-	</div>
+	</div> -->
 	<v-row>
-		<v-col>
+		<v-col class="pt-0">
 			<v-tabs>
 				<v-tab>Documents</v-tab>
 				<v-tab>Indexes</v-tab>
 				<v-tab>Stats</v-tab>
 
 				<v-tab-item :transition="false" :reverse-transition="false">
-					<document-list />
+					<query-form />
+					<query-results />
 				</v-tab-item>
 				<v-tab-item :transition="false" :reverse-transition="false">
 					<index-list />
@@ -30,12 +31,13 @@
 <script>
 import { mapState } from 'vuex';
 import { size } from '../formatters';
-import DocumentList from '@/components/DocumentList.vue';
 import IndexList from '@/components/IndexList.vue';
 import CollectionStats from '@/components/CollectionStats.vue';
+import QueryForm from '@/components/DocumentQueryForm.vue';
+import QueryResults from '@/components/DocumentQueryResults.vue';
 
 export default {
-	components: { DocumentList, IndexList, CollectionStats },
+	components: { QueryForm, QueryResults, IndexList, CollectionStats },
 	data() { return {
 	}},
 	computed: mapState({

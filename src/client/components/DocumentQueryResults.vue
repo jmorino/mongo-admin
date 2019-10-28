@@ -9,9 +9,12 @@
 
 	<template v-slot:top>
 		<v-toolbar dense flat color="grey lighten-2">
+			<v-toolbar-title class="subtitle-2">Documents (2531)</v-toolbar-title>
 			<v-spacer />
 			<bar-pagination :page="1" :count="10" :total="2531" />
-			<!-- <v-btn icon small><v-icon>mdi-plus</v-icon></v-btn> -->
+			<v-spacer />
+			<!-- <v-divider class="mx-3" vertical /> -->
+			<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
 		</v-toolbar>
 		<v-divider />
 	</template>
