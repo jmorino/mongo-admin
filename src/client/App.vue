@@ -1,6 +1,6 @@
 <template>
 <v-app>
-	<v-app-bar app dense>
+	<v-app-bar app dense clipped-left>
 		<v-toolbar-title class="headline">
 			<span>MongoDB</span>
 			<span class="primary--text">ADMIN</span>
