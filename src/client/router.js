@@ -2,9 +2,11 @@
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '@/views/Home.vue';
 import Databases from '@/views/Databases.vue';
 import Database from '@/views/Database.vue';
+import DBStats from '@/components/DBStats.vue';
+import Collection from '@/components/Collection.vue';
+import CollectionStats from '@/components/CollectionStats.vue';
 
 
 Vue.use(Router);
@@ -20,9 +22,22 @@ export const router = new Router({
 		},
 		{
 			path: '/:db',
-			name: 'database-overview',
 			component: Database,
 			props: true,
+			children: [
+				{
+					path: '',
+					name: 'database-overview',
+					component: DBStats,
+					props: true,
+				},
+				{
+					path: ':col',
+					name: 'collection-overview',
+					component: Collection,
+					props: true,
+				}
+			],
 		},
 		// {
 		// 	path: '/:id',

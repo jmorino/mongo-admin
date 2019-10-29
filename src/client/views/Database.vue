@@ -1,18 +1,7 @@
 <template>
 <div>
 	<collection-list />
-	<v-container fluid class="pa-0">
-		<v-row>
-			<v-col class="pt-0">
-				<!-- <v-toolbar dense flat color="secondary" dark>
-					<v-toolbar-title class="subtitle-1">{{ db.name }}</v-toolbar-title>
-				</v-toolbar> -->
-
-				<collection />
-				<!-- <db-stats /> -->
-			</v-col>
-		</v-row>
-	</v-container>
+	<router-view />
 </div>
 </template>
 

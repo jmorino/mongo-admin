@@ -9,7 +9,7 @@
 		<div class="flex-grow-1 overflow-auto">
 			<v-list nav dense>
 				<v-list-item-group color="primary" :value="selection">
-					<v-list-item dense v-for="c in collections" :key="c.name">
+					<v-list-item dense v-for="c in collections" :key="c.name" :to="collectionPageURL(c.name)">
 						<v-list-item-content>
 							<v-list-item-title>{{c.name}}</v-list-item-title>
 						</v-list-item-content>
