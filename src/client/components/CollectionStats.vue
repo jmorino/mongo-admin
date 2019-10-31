@@ -40,7 +40,7 @@
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Total index size</v-list-item-content>
-						<v-list-item-content>{{ stats.totalIndexSize }}</v-list-item-content>
+						<v-list-item-content>{{ stats.totalIndexSize | size }}</v-list-item-content>
 					</v-list-item>
 					<!-- <v-divider /> -->
 					<!-- <v-list-item>
