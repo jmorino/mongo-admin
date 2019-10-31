@@ -8,8 +8,10 @@
 					<v-spacer />
 					<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
 				</v-toolbar>
-				<v-divider />
-				<v-simple-table>
+				<v-progress-linear indeterminate :active="loading" height="2" />
+				<card-message v-if="loading" text="Loading collection indexes..." />
+				<card-message v-else-if="!indexCount" text="No index in this collection" />
+				<v-simple-table v-else>
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -52,17 +54,21 @@
 import { mapState } from 'vuex';
 import { size } from '../formatters';
 import { omit } from '../utils';
+import CardMessage from '@/components/CardMessage.vue';
 
 export default {
+	components: { CardMessage },
 	data() { return {
 	}},
 	computed: {
 		...mapState({
-			stats(state) { return state.collections.current.stats },
+			loading(state) { return state.collection.loading },
+			collection(state) { return state.collection.current },
 		}),
-		indexes()    { return this.stats.indexDetails },
-		indexSizes() { return this.stats.indexSizes   },
-		indexCount() { return this.stats.nindexes     },
+		stats()      { return this.collection && this.collection.stats },
+		indexes()    { return this.stats && this.stats.indexDetails || {} },
+		indexSizes() { return this.stats && this.stats.indexSizes },
+		indexCount() { return this.stats && this.stats.nindexes || 0 },
 	},
 	filters: {
 		size,

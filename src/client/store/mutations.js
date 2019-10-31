@@ -38,6 +38,29 @@ export const   setCollectionsLoaded  = state => { state.collections.loaded  = tr
 export const unsetCollectionsLoaded  = state => { state.collections.loaded  = false  };
 
 export const setCollections = (state, collections) => {
+	collections.sort((a,b) => {
+		if (a.name < b.name) { return -1 }
+		if (a.name > b.name) { return +1 }
+		return 0;
+	});
+
 	state.collections.all = collections;
 	state.collections.byID = arrayToObj(collections, 'name');
+};
+
+//=================================================================================================================
+
+export const   setCollectionLoading = state => { state.collection.loading = true  };
+export const unsetCollectionLoading = state => { state.collection.loading = false };
+export const   setCollectionLoaded  = state => { state.collection.loaded  = true  };
+export const unsetCollectionLoaded  = state => { state.collection.loaded  = false  };
+
+export const setCollection = (state, collection) => {
+	if (!collection) {
+		state.collection.current = null;
+	}
+	else {
+		state.collection.current = collection;
+		state.collection.byID[collection.name] = collection; // cache result (useful?)
+	}
 };

@@ -58,3 +58,21 @@ export const loadCollections = async ({ commit }, dbName) => {
 		commit('unsetCollectionsLoading');
 	}
 };
+
+//=================================================================================================================
+
+export const loadCollection = async ({ commit }, { dbName, collectionName }) => {
+	console.log('[DISPATCH]', 'loadCollection', dbName, collectionName);
+
+	commit('setCollectionLoading');
+	try {
+		const collection = await api.getCollectionByID(dbName, collectionName);
+		commit('setCollectionLoaded');
+		commit('setCollection', collection);
+		commit('unsetCollectionLoading');
+	}
+	catch(err) {
+		// TODO: handle error
+		commit('unsetCollectionLoading');
+	}
+};

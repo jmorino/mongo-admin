@@ -40,6 +40,18 @@ export default {
 		// current: mock.collection,
 	},
 	
+	collection: {
+		loading: false,
+		loaded: false,
+		loadError: null,
+
+		byID: {},
+		current: null,
+		// all: mock.collections,
+		// byID: arrayToObj(mock.collections, 'name'),
+		// current: mock.collection,
+	},
+	
 	documents: {
 		loading: false,
 		loaded: false,

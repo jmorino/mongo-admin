@@ -19,6 +19,12 @@ export default class API {
 		return await this.request(`/databases/${db}/collections`);
 	};
 	
+	//=================================================================================================================
+
+	async getCollectionByID(db, collection) {
+		return await this.request(`/databases/${db}/collections/${collection}`);
+	};
+	
 
 	//=============================================================================
 	//=========================== Private Methods =================================
@@ -28,7 +34,7 @@ export default class API {
 		if (path.charAt(0) === '/') { path = path.slice(1) } // remove leading slash if any
 		const url = `http://localhost:3000/api/${path}`;
 		
-		console.info(`[API] ${method.toUpperCase()} ${url}`, body);
+		console.info(`[API] ${method.toUpperCase()} ${url}`, body || '-');
 
 		const response = await fetch(url, {
 			method,
