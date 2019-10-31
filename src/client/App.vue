@@ -8,7 +8,11 @@
 			</router-link>
 		</v-toolbar-title>
 		<v-spacer />
-		<v-breadcrumbs :items="breadcrumbs" />
+		<v-breadcrumbs large :items="breadcrumbs">
+			<template v-slot:divider>
+				<v-icon>mdi-chevron-right</v-icon>
+			</template>
+		</v-breadcrumbs>
 		<v-spacer />
 	</v-app-bar>
 
