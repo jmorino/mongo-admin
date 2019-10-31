@@ -1,34 +1,43 @@
 <template>
-			<v-card>
-<v-data-table
-	fixed-header
-	hide-default-footer
-	:search="search"
-	:headers="headers"
-	:items="docs">
+<v-card>
+	<v-toolbar dense flat color="grey lighten-2">
+		<v-toolbar-title class="subtitle-2">Documents (2531)</v-toolbar-title>
+		<v-spacer />
+		<bar-pagination :page="1" :count="10" :total="2531" />
+		<v-spacer />
+		<!-- <v-divider class="mx-3" vertical /> -->
+		<!-- <v-btn icon small class="me-2"><v-icon color="error">mdi-delete</v-icon></v-btn> -->
+		<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
+	</v-toolbar>
 
-	<template v-slot:top>
-		<v-toolbar dense flat color="grey lighten-2">
-			<v-toolbar-title class="subtitle-2">Documents (2531)</v-toolbar-title>
-			<v-spacer />
-			<bar-pagination :page="1" :count="10" :total="2531" />
-			<v-spacer />
-			<!-- <v-divider class="mx-3" vertical /> -->
-			<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
-		</v-toolbar>
-		<v-divider />
-	</template>
+	<!-- <v-toolbar dense flat color="transparent">
+		<v-spacer />
+		<v-btn text><v-icon color="error">mdi-delete</v-icon>Delete all documents</v-btn>
+	</v-toolbar> -->
 
-	<template v-slot:item="{ item, headers }">
-		<tr>
-			<td v-for="k in headers" :key="`${item._id}-${k.value}`">
-				<div class="preview">{{ item[k.value] }}</div>
-			</td>
-		</tr>
-	</template>
+	<v-data-table
+		hide-default-footer
+		show-select
+		item-key="_id"
+		:headers="headers"
+		:items="docs"
+		v-model="selectedDocuments">
 
-</v-data-table>
-			</v-card>
+		<template v-slot:header.data-table-select="{ on, props }">
+			<v-simple-checkbox v-bind="props" v-on="on" />
+		</template>
+
+		<template v-slot:item="{ item, headers, isSelected, select }">
+			<tr>
+				<td v-for="(k,i) in headers" :key="`${item._id}-${k.value}`">
+					<v-simple-checkbox v-if="i === 0" :value="isSelected" @input="select($event)" />
+					<div class="preview">{{ item[k.value] }}</div>
+				</td>
+			</tr>
+		</template>
+
+	</v-data-table>
+</v-card>
 </template>
 
 
@@ -40,6 +49,7 @@ export default {
 	components: { BarPagination },
 	data() { return {
 		search: null,
+		selectedDocuments: [],
 	}},
 	computed: {
 		...mapState({
