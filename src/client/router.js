@@ -5,6 +5,7 @@ import Router from 'vue-router';
 import Databases from '@/views/Databases.vue';
 import Database from '@/views/Database.vue';
 import DBStats from '@/components/DBStats.vue';
+import CollectionList from '@/components/CollectionList.vue';
 import Collection from '@/components/Collection.vue';
 import CollectionStats from '@/components/CollectionStats.vue';
 
@@ -28,14 +29,24 @@ export const router = new Router({
 				{
 					path: '',
 					name: 'database-overview',
-					component: DBStats,
-					props: true,
+					// props: true,
+					// component: DBStats,
+					props: { default: true, menu: true },
+					components: {
+						default: DBStats,
+						menu: CollectionList,
+					},
 				},
 				{
 					path: ':col',
 					name: 'collection-overview',
-					component: Collection,
-					props: true,
+					// props: true,
+					// component: Collection,
+					props: { default: true, menu: true },
+					components: {
+						default: Collection,
+						menu: CollectionList,
+					},
 				}
 			],
 		},

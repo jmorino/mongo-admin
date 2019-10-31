@@ -1,6 +1,7 @@
 <template>
 <div>
-	<collection-list />
+	<!-- <collection-list :db="db" /> -->
+	<router-view name="menu" />
 	<router-view />
 </div>
 </template>
@@ -13,6 +14,9 @@ import DBStats from '@/components/DBStats.vue';
 import Collection from '@/components/Collection.vue';
 
 export default {
+	props: {
+		db: String,
+	},
 	components: {
 		'collection-list': CollectionList,
 		'db-stats': DBStats,
@@ -21,8 +25,8 @@ export default {
 	data() { return {
 	}},
 	computed: mapState({
-		db(state)  { return state.databases.current },
-		dbs(state) { return state.databases.all },
+		loading(state)  { return state.database.loading },
+		database(state)  { return state.database.current },
 	}),
 	methods: {
 		dbPageURL(dbName) {

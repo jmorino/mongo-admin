@@ -41,7 +41,7 @@ export default {
 	data() { return {
 	}},
 	computed: mapState({
-		collection(state) { return state.collections.current },
+		collection(state) { return state.database.collections },
 	}),
 	// filters: { size },
 	// methods: {

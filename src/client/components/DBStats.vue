@@ -6,46 +6,47 @@
 				<v-toolbar dense flat color="grey lighten-2">
 					<v-toolbar-title class="subtitle-2">Database Stats</v-toolbar-title>
 				</v-toolbar>
-				<v-divider />
-				<v-list dense class="body-2">
+				<v-progress-linear indeterminate :active="loading" height="2" />
+				<card-message v-if="loading" text="Loading database stats..." />
+				<v-list dense class="body-2" v-if="database">
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Collections (incl. system.namespaces)</v-list-item-content>
-						<v-list-item-content>{{ db.stats.collections }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.collections }}</v-list-item-content>
 					</v-list-item>
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Data Size</v-list-item-content>
-						<v-list-item-content>{{ db.stats.dataSize | size }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.dataSize | size }}</v-list-item-content>
 					</v-list-item>
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Storage Size</v-list-item-content>
-						<v-list-item-content>{{ db.stats.storageSize | size }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.storageSize | size }}</v-list-item-content>
 					</v-list-item>
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Avg Obj Size #</v-list-item-content>
-						<v-list-item-content>{{ db.stats.avgObjSize | size }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.avgObjSize | size }}</v-list-item-content>
 					</v-list-item>
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Objects #</v-list-item-content>
-						<v-list-item-content>{{ db.stats.objects }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.objects }}</v-list-item-content>
 					</v-list-item>
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Extents #</v-list-item-content>
-						<v-list-item-content>{{ db.stats.numExtents }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.numExtents }}</v-list-item-content>
 					</v-list-item>
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Indexes #</v-list-item-content>
-						<v-list-item-content>{{ db.stats.indexes }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.indexes }}</v-list-item-content>
 					</v-list-item>
 					<v-divider />
 					<v-list-item>
 						<v-list-item-content class="font-weight-light">Index Size</v-list-item-content>
-						<v-list-item-content>{{ db.stats.indexSize | size }}</v-list-item-content>
+						<v-list-item-content>{{ database.stats.indexSize | size }}</v-list-item-content>
 					</v-list-item>
 				</v-list>
 			</v-card>
@@ -58,12 +59,18 @@
 <script>
 import { mapState } from 'vuex';
 import { size } from '../formatters';
+import CardMessage from '@/components/CardMessage.vue';
 
 export default {
+	props: {
+		db: String,
+	},
+	components: { CardMessage },
 	data() { return {
 	}},
 	computed: mapState({
-		db(state) { return state.databases.current },
+		loading(state) { return state.database.loading },
+		database(state) { return state.database.current },
 	}),
 	filters: { size },
 	methods: {
@@ -71,8 +78,8 @@ export default {
 			return { name: 'database-overview', params: { db: dbName } };
 		},
 	},
-	// mounted() {
-	// 	this.$store.dispatch('loadDatabase', this.db);
-	// },
+	mounted() {
+		this.$store.dispatch('loadDatabase', this.db);
+	},
 }
 </script>
