@@ -1,14 +1,17 @@
 <template>
 <v-card>
 	<v-toolbar dense flat color="grey lighten-2">
-		<v-toolbar-title class="subtitle-2">Documents (2531)</v-toolbar-title>
+		<v-toolbar-title class="subtitle-2">Documents ({{ total }})</v-toolbar-title>
 		<v-spacer />
-		<bar-pagination :page="1" :count="10" :total="2531" />
+		<!-- <bar-pagination :page="page" :count="count" :total="total" /> -->
+		<bar-pagination :start="start" :end="end" :total="total" @previous="previous" @next="next" @goto="goto" />
 		<v-spacer />
 		<!-- <v-divider class="mx-3" vertical /> -->
 		<!-- <v-btn icon small class="me-2"><v-icon color="error">mdi-delete</v-icon></v-btn> -->
 		<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
 	</v-toolbar>
+	<v-progress-linear indeterminate :active="loading" height="2" />
+	<!-- <card-message v-if="loading" text="Loading database stats..." /> -->
 
 	<!-- <v-toolbar dense flat color="transparent">
 		<v-spacer />
@@ -16,8 +19,9 @@
 	</v-toolbar> -->
 
 	<v-data-table
-		hide-default-footer
 		show-select
+		hide-default-footer
+		:hide-default-header="!total"
 		item-key="_id"
 		:headers="headers"
 		:items="docs"
@@ -44,16 +48,23 @@
 <script>
 import { mapState } from 'vuex';
 import BarPagination from '@/components/BarPagination.vue';
+import CardMessage from '@/components/CardMessage.vue';
 
 export default {
-	components: { BarPagination },
+	components: { BarPagination, CardMessage },
 	data() { return {
 		search: null,
 		selectedDocuments: [],
 	}},
 	computed: {
 		...mapState({
-			docs(state) { return state.documents.all },
+			loading(state)  { return state.documents.loading },
+			docs(state)  { return state.documents.all },
+			// page(state)  { return state.documents.pagination.page },
+			// count(state) { return state.documents.pagination.count },
+			start(state)  { return state.documents.pagination.start },
+			end(state) { return state.documents.pagination.end },
+			total(state) { return state.documents.pagination.total },
 		}),
 		headers() {
 			const tpl = this.docs[0];
@@ -61,6 +72,11 @@ export default {
 				? Object.keys(tpl).map(key => ({ text: key, sortable: true, value: key, class: 'header-no-wrap' }))
 				: [];
 		},
+	},
+	methods: {
+		previous() { console.log('previous'); this.$emit('previous', null) },
+		next() { console.log('next'); this.$emit('next', null) },
+		goto(index) { console.log('goto', index); this.$emit('goto', index) },
 	},
 }
 </script>

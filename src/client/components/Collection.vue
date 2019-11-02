@@ -14,8 +14,8 @@
 				<v-tab>Stats</v-tab>
 
 				<v-tab-item :transition="false" :reverse-transition="false">
-					<query-form />
-					<query-results />
+					<query-form ref="query" @query="fetchQueryResults" />
+					<query-results @previous="fetchPreviousPage" @next="fetchNextPage" @goto="fetchOnePage" />
 				</v-tab-item>
 				<v-tab-item :transition="false" :reverse-transition="false">
 					<index-list />
@@ -53,9 +53,35 @@ export default {
 	}),
 	// filters: { size },
 	methods: {
-		fetchCollection() {
-			this.$store.dispatch('loadCollection', { dbName: this.db, collectionName: this.col });
-		}
+		async fetchCollection() {
+			await this.$store.dispatch('loadCollection', { dbName: this.db, collectionName: this.col });
+			this.fetchQueryResults();
+		},
+		resetQuery() {
+			this.$ref['query'].reset();
+			this.$store.dispatch('setQuery');
+		},
+		runQuery(query) {
+			this.$store.dispatch('setQuery', query);
+		},
+		fetchOnePage(index) {
+			this.$store.dispatch('queryPageByIndex', index);
+			this.fetchQueryResults();
+		},
+		fetchPreviousPage() {
+			this.$store.dispatch('queryPrevPage');
+			this.fetchQueryResults();
+		},
+		fetchNextPage() {
+			console.log('fetchNextPage')
+			this.$store.dispatch('queryNextPage');
+			this.fetchQueryResults();
+		},
+		fetchQueryResults() {
+			const dbName = this.db;
+			const collectionName = this.col;
+			this.$store.dispatch('queryCollection', { dbName, collectionName });
+		},
 	},
 	watch: {
 		col() { this.fetchCollection() },

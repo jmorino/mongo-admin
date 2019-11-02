@@ -12,13 +12,14 @@ export const loadDatabases = async ({ commit, state }) => {
 	commit('setDBsLoading');
 
 	try {
-		const dbs = await api.getAllDatabases();
+		const { data } = await api.getAllDatabases();
 		commit('setDBsLoaded');
-		commit('setDatabases', dbs);
+		commit('setDatabases', data);
 		commit('unsetDBsLoading');
 	}
 	catch(err) {
 		// TODO: handle error
+		console.error(err);
 		commit('unsetDBsLoading');
 	}
 };
@@ -30,13 +31,14 @@ export const loadDatabase = async ({ commit }, dbName) => {
 	
 	commit('setDBLoading');
 	try {
-		const db = await api.getDatabaseByID(dbName);
+		const { data } = await api.getDatabaseByID(dbName);
 		commit('setDBLoaded');
-		commit('setDatabase', db);
+		commit('setDatabase', data);
 		commit('unsetDBLoading');
 	}
 	catch(err) {
 		// TODO: handle error
+		console.error(err);
 		commit('unsetDBLoading');
 	}
 };
@@ -48,13 +50,14 @@ export const loadCollections = async ({ commit }, dbName) => {
 
 	commit('setCollectionsLoading');
 	try {
-		const collections = await api.getCollectionsByDBName(dbName);
+		const { data } = await api.getCollectionsByDBName(dbName);
 		commit('setCollectionsLoaded');
-		commit('setCollections', collections);
+		commit('setCollections', data);
 		commit('unsetCollectionsLoading');
 	}
 	catch(err) {
 		// TODO: handle error
+		console.error(err);
 		commit('unsetCollectionsLoading');
 	}
 };
@@ -66,13 +69,43 @@ export const loadCollection = async ({ commit }, { dbName, collectionName }) => 
 
 	commit('setCollectionLoading');
 	try {
-		const collection = await api.getCollectionByID(dbName, collectionName);
+		const { data } = await api.getCollectionByID(dbName, collectionName);
 		commit('setCollectionLoaded');
-		commit('setCollection', collection);
+		commit('setCollection', data);
 		commit('unsetCollectionLoading');
 	}
 	catch(err) {
 		// TODO: handle error
+		console.error(err);
 		commit('unsetCollectionLoading');
 	}
 };
+
+//=================================================================================================================
+
+export const setQuery = ({ commit }, query = null) => { commit('setQuery', query) };
+
+export const queryCollection = async ({ commit, state }, { dbName, collectionName, query}) => {
+	if (query) { commit('setQuery', query) }
+	else { query = state.documents.query }
+
+	const pagination = state.documents.pagination;
+
+	commit('setDocumentsLoading');
+	try {
+		const response = await api.queryCollectionByID(dbName, collectionName, query, pagination);
+		commit('setDocumentsLoaded');
+		commit('setPagination', response.pagination);
+		commit('setDocuments', response.data);
+		commit('unsetDocumentsLoading');
+	}
+	catch(err) {
+		// TODO: handle error
+		console.error(err);
+		commit('unsetDocumentsLoading');
+	}
+};
+
+export const queryPrevPage = ({ commit }) => { commit('setDocumentsPrevPage') };
+export const queryNextPage = ({ commit }) => { commit('setDocumentsNextPage') };
+export const queryPageByIndex = ({ commit }, index) => { commit('setDocumentsPageByIndex', index) };

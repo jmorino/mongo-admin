@@ -69,6 +69,17 @@ export default {
 		}
 	},
 	methods: {
+		reset() {
+			this.simple = {
+				key: null,
+				value: null,
+				type: valueTypes[0],
+			};
+			this.complex = {
+				query: null,
+				projection: null,
+			};
+		},
 		runQuery() {
 			const query = this.tabIndex === 0 ? { ...this.simple } : { ...this.complex };
 			this.$emit('query', query);

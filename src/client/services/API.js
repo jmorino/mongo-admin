@@ -1,28 +1,38 @@
 'use strict';
 
+import { parseContentRange, buildQueryParams, buildURL } from './helpers';
+
 
 export default class API {
 	
 	async getAllDatabases() {
-		return await this.request('/databases');
+		return await this.get('/api/databases');
 	};
 	
 	//=================================================================================================================
 
 	async getDatabaseByID(db) {
-		return await this.request(`/databases/${db}`);
+		return await this.get(`/api/databases/${db}`);
 	};
 	
 	//=================================================================================================================
 
 	async getCollectionsByDBName(db) {
-		return await this.request(`/databases/${db}/collections`);
+		return await this.get(`/api/databases/${db}/collections`);
 	};
 	
 	//=================================================================================================================
 
 	async getCollectionByID(db, collection) {
-		return await this.request(`/databases/${db}/collections/${collection}`);
+		return await this.get(`/api/databases/${db}/collections/${collection}`);
+	};
+	
+	//=================================================================================================================
+
+	async queryCollectionByID(db, collection, query, pagination) {
+		const params = buildQueryParams(query, pagination);
+		console.log(params.toString())
+		return await this.get(`/api/databases/${db}/collections/${collection}/documents`, params);
 	};
 	
 
@@ -30,17 +40,23 @@ export default class API {
 	//=========================== Private Methods =================================
 	//=============================================================================
 
-	async request(path, method = 'get', body = null) {
-		if (path.charAt(0) === '/') { path = path.slice(1) } // remove leading slash if any
-		const url = `http://localhost:3000/api/${path}`;
-		
+	// aliases
+	get(path, params) { return this.request(path, 'get', null, params) }
+
+
+	async request(path, method = 'get', body = null, params = null) {
+		const url = buildURL(path, 'http://localhost:3000', params);
 		console.info(`[API] ${method.toUpperCase()} ${url}`, body || '-');
 
-		const response = await fetch(url, {
-			method,
-			body,
-		});
+		const response = await fetch(url, { method, body });
+		if (!response.ok) {
+			console.error('response error', response)
+			throw new Error('Request failed');
+		} // TODO:
 
-		return await response.json();
+		const pagination = parseContentRange(response.headers.get('content-range'));
+		const data = await response.json();
+
+		return { data, pagination };
 	}
 }

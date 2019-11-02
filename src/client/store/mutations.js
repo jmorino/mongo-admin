@@ -64,3 +64,25 @@ export const setCollection = (state, collection) => {
 		state.collection.byID[collection.name] = collection; // cache result (useful?)
 	}
 };
+
+//=================================================================================================================
+
+export const setQuery = (state, query ) => { state.documents.query = query };
+export const setPagination = (state, pagination) => { Object.assign(state.documents.pagination, pagination) };
+
+export const setDocumentsPrevPage = (state) => { --state.documents.pagination.page };
+export const setDocumentsNextPage = (state) => { ++state.documents.pagination.page };
+export const setDocumentsPageByIndex = (state, index) => { 
+	const page = parseInt(index / state.documents.pagination.count);
+	state.documents.pagination.page = page;
+};
+
+export const   setDocumentsLoading = state => { state.documents.loading = true  };
+export const unsetDocumentsLoading = state => { state.documents.loading = false };
+export const   setDocumentsLoaded  = state => { state.documents.loaded  = true  };
+export const unsetDocumentsLoaded  = state => { state.documents.loaded  = false  };
+
+export const setDocuments = (state, documents) => {
+	state.documents.all  = documents;
+	state.documents.byID = arrayToObj(documents, '_id');
+};

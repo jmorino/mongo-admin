@@ -57,13 +57,22 @@ export default {
 		loaded: false,
 		loadError: null,
 
-		all: mock.documents,
-		byID: arrayToObj(mock.documents, '_id'),
-		current: mock.documents[0],
+		all: [],
+		byID: {},
+		current: null,
+		// query: null,
+		query: {
+			key: 'standard', value: 'SP', type: 'String',
+		},
 		pagination: {
 			page: 0,
-			count: 10,
-			total: null,
+			count: 20,
+			start: 0,
+			end: 0,
+			total: 0,
 		},
+		// all: mock.documents,
+		// byID: arrayToObj(mock.documents, '_id'),
+		// current: mock.documents[0],
 	},
 };
