@@ -14,8 +14,7 @@
 				<v-tab>Stats</v-tab>
 
 				<v-tab-item :transition="false" :reverse-transition="false">
-					<query-form ref="query" @query="fetchQueryResults" />
-					<query-results @previous="fetchPreviousPage" @next="fetchNextPage" @goto="fetchOnePage" />
+					<document-list :db="db" :col="col" @query="fetchQueryResults" @previous="fetchPreviousPage" @next="fetchNextPage" @goto="fetchOnePage" />
 				</v-tab-item>
 				<v-tab-item :transition="false" :reverse-transition="false">
 					<index-list />
@@ -36,15 +35,14 @@ import { size } from '../formatters';
 import CardMessage from '@/components/CardMessage.vue';
 import IndexList from '@/components/IndexList.vue';
 import CollectionStats from '@/components/CollectionStats.vue';
-import QueryForm from '@/components/DocumentQueryForm.vue';
-import QueryResults from '@/components/DocumentQueryResults.vue';
+import DocumentList from '@/components/DocumentList.vue';
 
 export default {
 	props: {
 		db: String,
 		col: String,
 	},
-	components: { CardMessage, QueryForm, QueryResults, IndexList, CollectionStats },
+	components: { CardMessage, DocumentList, IndexList, CollectionStats },
 	data() { return {
 	}},
 	computed: mapState({
@@ -58,7 +56,6 @@ export default {
 			this.fetchQueryResults();
 		},
 		resetQuery() {
-			this.$ref['query'].reset();
 			this.$store.dispatch('setQuery');
 		},
 		runQuery(query) {
