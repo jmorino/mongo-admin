@@ -57,7 +57,7 @@ export default {
 		db: String,
 		col: String,
 	},
-	components: { CardMessage, DocumentList, IndexList, CollectionStats, CollectionActionsBtn },
+	components: { CardMessage, CollectionActionsBtn, DocumentList, IndexList, CollectionStats },
 	data() { return {
 	}},
 	computed: mapState({
