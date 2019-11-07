@@ -35,6 +35,12 @@ export default class API {
 		return await this.get(`/api/databases/${db}/collections/${collection}/documents`, params);
 	};
 	
+	//=================================================================================================================
+
+	async getDocumentByID(db, collection, id) {
+		return await this.get(`/api/databases/${db}/collections/${collection}/documents/${id}`);
+	};
+	
 
 	//=============================================================================
 	//=========================== Private Methods =================================

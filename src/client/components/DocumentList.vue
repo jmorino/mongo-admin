@@ -61,7 +61,6 @@ import BarPagination from '@/components/BarPagination.vue';
 import BarIconAction from '@/components/BarIconAction.vue';
 import CardMessage from '@/components/CardMessage.vue';
 import QueryForm from '@/components/DocumentQueryForm.vue';
-import QueryResults from '@/components/DocumentQueryResults.vue';
 
 
 export default {
@@ -69,7 +68,7 @@ export default {
 		db: String,
 		col: String,
 	},
-	components: { BarPagination, BarIconAction, CardMessage, QueryForm, QueryResults },
+	components: { BarPagination, BarIconAction, CardMessage, QueryForm },
 	data() { return {
 		item: null,
 		selection: [],

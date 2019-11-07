@@ -71,8 +71,18 @@ export default {
 			end: 0,
 			total: 0,
 		},
+		showDialog: false,
 		// all: mock.documents,
 		// byID: arrayToObj(mock.documents, '_id'),
 		// current: mock.documents[0],
+	},
+
+	document: {
+		loading: false,
+		loaded: false,
+		loadError: null,
+
+		byID: {},
+		current: '',
 	},
 };

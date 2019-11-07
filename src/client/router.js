@@ -7,7 +7,7 @@ import Database from '@/views/Database.vue';
 import DBStats from '@/components/DBStats.vue';
 import CollectionList from '@/components/CollectionList.vue';
 import Collection from '@/components/Collection.vue';
-import CollectionStats from '@/components/CollectionStats.vue';
+import Document from '@/components/Document.vue';
 
 
 Vue.use(Router);
@@ -47,7 +47,18 @@ export const router = new Router({
 						default: Collection,
 						menu: CollectionList,
 					},
-				}
+				},
+				{
+					path: ':col/:id',
+					name: 'document',
+					// props: true,
+					// component: Collection,
+					props: { default: true, menu: true },
+					components: {
+						default: Document,
+						menu: CollectionList,
+					},
+				},
 			],
 		},
 		// {

@@ -90,9 +90,7 @@ export default {
 			this.fetchQueryResults();
 		},
 		fetchQueryResults() {
-			const dbName = this.db;
-			const collectionName = this.col;
-			this.$store.dispatch('queryCollection', { dbName, collectionName });
+			this.$store.dispatch('queryCollection', { dbName: this.db, collectionName: this.col });
 		},
 		createDocument() { console.log('createDocument') },
 		exportCollection() { console.log('exportCollection') },

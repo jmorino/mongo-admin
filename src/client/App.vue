@@ -32,7 +32,7 @@ export default {
 	computed: {
 		breadcrumbs(route) {
 			const crumbs = [];
-			const { db, col } = this.$route.params;
+			const { db, col, id } = this.$route.params;
 			
 			if (db) {
 				crumbs.push({
@@ -48,6 +48,13 @@ export default {
 					to: { name: 'collection-overview', params: { db, col } },
 				});
 			}
+			if (id) {
+				crumbs.push({
+					text: id,
+					exact: true,
+					to: { name: 'document', params: { db, col, id } },
+				});
+			}
 
 			return crumbs;
 		}
@@ -56,9 +63,15 @@ export default {
 </script>
 
 
-<style lang="less" scoped>
+<style lang="less">
 .home-btn {
 	text-decoration: none;
 	text-transform: none;
+}
+.v-divider.v-divider--vertical {
+	min-height: 60%;
+	height: 60%;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 </style>
