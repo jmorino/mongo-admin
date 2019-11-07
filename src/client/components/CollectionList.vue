@@ -2,13 +2,13 @@
 <v-navigation-drawer app clipped class="pa-0">
 	<div class="d-flex flex-column overflow-hidden fill-height">
 		<div class="flex-shrink-0">
-			<v-toolbar dense flat dark color="secondary">
+	<v-progress-linear indeterminate :active="loading" height="2" />
+	<card-message v-if="loading" text="Loading collections..." />
+			<!-- <v-toolbar dense flat dark color="secondary">
 				<v-toolbar-title class="subtitle-2">Collections ({{collections.length}})</v-toolbar-title>
 				<v-spacer />
 				<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
-			</v-toolbar>
-			<v-progress-linear indeterminate :active="loading" height="2" />
-			<card-message v-if="loading" text="Loading collections..." />
+			</v-toolbar> -->
 		</div>
 		<div class="flex-grow-1 overflow-auto">
 			<v-list nav dense>

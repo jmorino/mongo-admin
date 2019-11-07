@@ -31,25 +31,22 @@
 			</v-card>
 		</v-menu>
 
-		<v-btn small icon :disabled="isFirst" @click="prev">
-			<v-icon :color="color" :size="size">mdi-chevron-left</v-icon>
-		</v-btn>
-		
-		<v-btn small icon :disabled="isLast" @click="next">
-			<v-icon :color="color" :size="size">mdi-chevron-right</v-icon>
-		</v-btn>
+		<bar-icon-action no-margin icon="mdi-chevron-left"  tooltip="Prev" :disabled="isFirst" @click="prev" />
+		<bar-icon-action no-margin icon="mdi-chevron-right" tooltip="Next" :disabled="isLast"  @click="next" />
 	</div>
 </template>
 
 <script>
+import BarIconAction from '@/components/BarIconAction.vue';
+
 export default {
 	props: {
 		start: Number,
 		end: Number,
 		total: Number,
 		color: { type: String, default: null },
-		size:  { type: String, default: null },
 	},
+	components: { BarIconAction },
 	data() { return {
 		index: {
 			menu: false,

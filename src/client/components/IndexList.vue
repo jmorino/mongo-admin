@@ -7,6 +7,7 @@
 					<v-toolbar-title class="subtitle-2">Indexes ({{ indexCount }})</v-toolbar-title>
 					<v-spacer />
 					<v-btn icon small class="me-0"><v-icon>mdi-plus</v-icon></v-btn>
+					<bar-icon-action no-margin icon="mdi-plus" tooltip="New index" :disabled="loading" @click="$emit('index')" />
 				</v-toolbar>
 				<v-progress-linear indeterminate :active="loading" height="2" />
 				<card-message v-if="loading" text="Loading collection indexes..." />
