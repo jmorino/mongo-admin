@@ -13,5 +13,5 @@ export default async (dbName, collectionName, { p, c }) => {
 	const [total, items] = await Promise.all([cursor.count(), cursor.toArray()]);
 	const end = start + items.length;
 	
-	return { start, end, total, items };
+	return { start, end, total, items, page: p, count: c };
 };

@@ -3,7 +3,7 @@
 		<v-menu offset-y :close-on-content-click="false" v-model="index.menu">
 			<template v-slot:activator="{ on }">
 				<v-btn text class="caption text-lowercase" v-on="on">
-					<div>{{ total ? start + 1 : start }}&ndash;{{ end }} sur {{ total }}</div>
+					<div>{{ start + 1 }}&ndash;{{ end }} sur {{ total }}</div>
 				</v-btn>
 			</template>
 
@@ -53,7 +53,7 @@ export default {
 			value: 0,
 			valid: true,
 			rules: [
-				v => (v >= 0 && v < this.total) || 'index out of range',
+				v => (v > 0 && v <= this.total) || 'index out of range',
 			]
 		}
 	}},
@@ -62,6 +62,7 @@ export default {
 		isLast()  { return this.end >= this.total },
 	},
 	methods: {
+		init() { this.index.value = this.start + 1 },
 		prev() {
 			if (this.isFirst) { return }
 
@@ -88,13 +89,14 @@ export default {
 		},
 		goto() {
 			if (this.index.valid) {
-				this.$emit('goto', this.index.value);
+				this.$emit('goto', this.index.value - 1);
 				this.index.menu = false;
 			}
 		},
 	},
 	watch: {
-		start() { this.index.value = this.start },
-	}
+		start() { this.init() },
+	},
+	mounted() { this.init() },
 }
 </script>

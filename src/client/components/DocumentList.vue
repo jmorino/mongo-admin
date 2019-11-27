@@ -78,10 +78,12 @@ export default {
 		...mapState({
 			loading(state)  { return state.documents.loading },
 			docs(state)     { return state.documents.all },
-			start(state)    { return state.documents.pagination.start },
-			end(state)      { return state.documents.pagination.end },
+			page(state)     { return state.documents.pagination.page },
+			count(state)    { return state.documents.pagination.count },
 			total(state)    { return state.documents.pagination.total },
 		}),
+		start() { return this.page * this.count },
+		end()   { return this.start + this.docs.length },
 		headers() {
 			const tpl = this.docs[0];
 			return [{ sortable: false }].concat(tpl

@@ -5,8 +5,10 @@ export const parseContentRange = contentRange => {
 	const tokens = /^items (\d+)-(\d+)\/(\d+)/.exec(contentRange);
 	if (!tokens) { return {} }
 
-	const [_, start, end, total] = tokens;
-	return { start: +start, end: +end, total: +total };
+	// const [_, start, end, total] = tokens;
+	// return { start: +start, end: +end, total: +total };
+	const [_, page, count, total] = tokens;
+	return { page: +page, count: +count, total: +total };
 };
 
 //=================================================================================================================

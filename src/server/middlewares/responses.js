@@ -17,15 +17,18 @@ export const handleObject = callback => async (req, res, next) => {
 
 export const handlePaginatedObject = callback => async (req, res, next) => {
 	try {
-		const { start, end, total, items } = await callback(req);
+		// const { start, end, total, items } = await callback(req);
+		const { page, count, total, items } = await callback(req);
 
 		// ensure response validity
-		if (start == null || end == null || total == null || items == null) { throw new Error('Invalid pagination structure') }
+		// if (start == null || end == null || total == null || items == null) { throw new Error('Invalid pagination structure') }
+		if (page == null || count == null || total == null || items == null) { throw new Error('Invalid pagination structure') }
 
 		// set specific headers
 		res.set({
 			'Access-Control-Expose-Headers' : 'Content-Range',
-			'Content-Range' : `items ${start}-${end}/${total}`
+			// 'Content-Range' : `items ${start}-${end}/${total}`,
+			'Content-Range' : `items ${page}-${count}/${total}`,
 		});
 
 		// send response
