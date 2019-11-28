@@ -30,6 +30,8 @@ router.route('/databases/:db/collections/:collection')
 	.delete(collections.remove);
 
 // document-related routes
+router.route('/databases/:db/collections/:collection/_query')
+	.post(documents.query);
 router.route('/databases/:db/collections/:collection/documents')
 	.get(documents.getAll)
 	.post(documents.create);

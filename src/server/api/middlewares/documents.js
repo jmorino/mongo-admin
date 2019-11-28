@@ -10,13 +10,33 @@ import replaceDocument from '../use-cases/replace-document';
 import removeDocument  from '../use-cases/remove-document';
 
 
+export const query = handlePaginatedObject(async ({ params, query, body }) => {
+	const paging = validate(query, {
+		'p': { type: SimpleSchema.Integer, optional: true, defaultValue:  0 },
+		'c': { type: SimpleSchema.Integer, optional: true, defaultValue: 10 },
+	});
+	const q = validate(body, {
+		'query': { type: Object, blackbox: true },
+		'projection': { type: Object, blackbox: true },
+	});
+
+	return await getDocuments(params.db, params.collection, paging, q);
+});
+
+//=================================================================================================================
+
 export const getAll = handlePaginatedObject(async ({ params, query }) => {
 	const paging = validate(query, {
 		'p': { type: SimpleSchema.Integer, optional: true, defaultValue:  0 },
 		'c': { type: SimpleSchema.Integer, optional: true, defaultValue: 10 },
 	});
+	const q = validate(query, {
+		'key':   { type: String, optional: true, defaultValue: null },
+		'value': { type: String, optional: true, defaultValue: null },
+		'type':  { type: String, optional: true, defaultValue: null },
+	});
 
-	return await getDocuments(params.db, params.collection, paging);
+	return await getDocuments(params.db, params.collection, paging, q);
 });
 
 //=================================================================================================================
