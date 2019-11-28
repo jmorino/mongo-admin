@@ -59,10 +59,20 @@ export default {
 
 		all: [],
 		byID: {},
+		fields: [],
 		current: null,
-		// query: null,
-		query: {
-			key: 'standard', value: 'SP', type: 'String',
+		currentQuery: {
+			type: null,
+			content: null,
+		},
+		draftQuery: {
+			queryType: 'simple',
+			key: 'standard',
+			value: 'SP',
+			type: 'String',
+			types: ['String','RegEx','Boolean','Number','Date'],			
+			query: null,
+			projection: null,
 		},
 		pagination: {
 			page: 0,

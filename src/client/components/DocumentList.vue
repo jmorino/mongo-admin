@@ -2,7 +2,7 @@
 <v-container>
 	<v-row>
 		<v-col>
-			<query-form ref="query" @query="query" />
+			<query-form ref="query" @clear="clear" @submit="submit" />
 		</v-col>
 	</v-row>
 	<v-row>
@@ -16,6 +16,7 @@
 						<bar-icon-action icon="mdi-delete" tooltip="Supprimer" @click="deleteSelection" />
 					</template>
 					<v-spacer />
+					<v-subheader v-if="isFiltered">Documents are filtered by query</v-subheader>
 					<bar-pagination :start="start" :end="end" :total="total" @previous="previous" @next="next" @goto="goto" />
 				</v-toolbar>
 				<v-progress-linear indeterminate :active="loading" height="2" />
@@ -78,17 +79,16 @@ export default {
 		...mapState({
 			loading(state)  { return state.documents.loading },
 			docs(state)     { return state.documents.all },
+			fields(state)   { return state.collection.current && state.collection.current.rootFields || [] },
 			page(state)     { return state.documents.pagination.page },
 			count(state)    { return state.documents.pagination.count },
 			total(state)    { return state.documents.pagination.total },
+			isFiltered(state) { return !!state.documents.currentQuery.content },
 		}),
 		start() { return this.page * this.count },
 		end()   { return this.start + this.docs.length },
 		headers() {
-			const tpl = this.docs[0];
-			return [{ sortable: false }].concat(tpl
-				? Object.keys(tpl).map(key => ({ text: key, sortable: true, value: key, class: 'no-wrap' }))
-				: []);
+			return [{ sortable: false }].concat(this.fields.map(key => ({ text: key, sortable: true, value: key, class: 'no-wrap' })));
 		},
 	},
 	methods: {
@@ -105,7 +105,8 @@ export default {
 		},
 
 		refresh() { console.log('refresh') },
-		query(query) { this.$emit('query', query) },
+		submit() { this.$emit('submit') },
+		clear()  { this.$emit('clear') },
 		previous()   { this.$emit('previous') },
 		next()       { this.$emit('next') },
 		goto(index)  { this.$emit('goto', index) },

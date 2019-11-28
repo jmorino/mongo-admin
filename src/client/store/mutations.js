@@ -70,7 +70,25 @@ export const setCollection = (state, collection) => {
 
 //=================================================================================================================
 
-export const setQuery = (state, query ) => { state.documents.query = query };
+export const setDraftQueryProperty = (state, { key, value }) => { state.documents.draftQuery[key] = value };
+export const submitQuery = state => {
+	const { queryType, key, value, type, query, projection } = state.documents.draftQuery;
+	state.documents.currentQuery = {
+		type: queryType,
+		content: queryType === 'simple' ? { key, value, type } : { query, projection },
+	};
+};
+export const clearQuery = state => {
+	state.documents.currentQuery = { type: 'simple', content: null };
+	state.documents.draftQuery = { ...state.documents.draftQuery,
+		key: null,
+		value: null,
+		type: state.documents.draftQuery.types[0],
+		query: null,
+		projection: null,
+	};
+};
+
 export const setPagination = (state, pagination) => { Object.assign(state.documents.pagination, pagination) };
 
 export const setDocumentsPrevPage = (state) => { --state.documents.pagination.page };

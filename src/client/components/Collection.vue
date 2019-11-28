@@ -27,7 +27,7 @@
 				<v-tab>Stats</v-tab>
 
 				<v-tab-item :transition="false" :reverse-transition="false">
-					<document-list :db="db" :col="col" @query="fetchQueryResults" @previous="fetchPreviousPage" @next="fetchNextPage" @goto="fetchOnePage" />
+					<document-list :db="db" :col="col" @clear="resetQuery" @submit="runQuery" @previous="fetchPreviousPage" @next="fetchNextPage" @goto="fetchOnePage" />
 				</v-tab-item>
 				<v-tab-item :transition="false" :reverse-transition="false">
 					<index-list />
@@ -72,10 +72,12 @@ export default {
 			this.fetchQueryResults();
 		},
 		resetQuery() {
-			this.$store.dispatch('setQuery');
+			this.$store.dispatch('clearQuery');
+			this.fetchQueryResults();
 		},
-		runQuery(query) {
-			this.$store.dispatch('setQuery', query);
+		runQuery() {
+			this.$store.dispatch('submitQuery');
+			this.fetchQueryResults();
 		},
 		fetchOnePage(index) {
 			this.$store.dispatch('queryPageByIndex', index);
@@ -97,7 +99,10 @@ export default {
 		deleteCollection() { console.log('deleteCollection') },
 	},
 	watch: {
-		col() { this.fetchCollection() },
+		col() {
+			this.$store.dispatch('clearQuery');
+			this.fetchCollection();
+		},
 	},
 	mounted() {
 		this.fetchCollection();

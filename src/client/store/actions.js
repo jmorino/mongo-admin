@@ -85,17 +85,16 @@ export const loadCollection = async ({ commit }, { dbName, collectionName }) => 
 
 //=================================================================================================================
 
-export const setQuery = ({ commit }, query = null) => { commit('setQuery', query) };
+export const setDraftQueryProperty = ({ commit }, { key, value }) => { commit('setDraftQueryProperty', { key, value }) };
+export const clearQuery  = ({ commit }) => { commit('clearQuery')  };
+export const submitQuery = ({ commit }) => { commit('submitQuery') };
 
-export const queryCollection = async ({ commit, state }, { dbName, collectionName, query}) => {
-	if (query) { commit('setQuery', query) }
-	else { query = state.documents.query }
-
-	const pagination = state.documents.pagination;
+export const queryCollection = async ({ commit, state }, { dbName, collectionName }) => {
+	const { pagination, currentQuery } = state.documents;
 
 	commit('setDocumentsLoading');
 	try {
-		const response = await api.queryCollectionByID(dbName, collectionName, query, pagination);
+		const response = await api.queryCollectionByID(dbName, collectionName, currentQuery, pagination);
 		commit('setDocumentsLoaded');
 		commit('setPagination', response.pagination);
 		commit('setDocuments', response.data);
