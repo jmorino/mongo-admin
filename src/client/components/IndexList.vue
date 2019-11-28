@@ -56,9 +56,10 @@ import { mapState } from 'vuex';
 import { size } from '../formatters';
 import { omit } from '../utils';
 import CardMessage from '@/components/CardMessage.vue';
+import BarIconAction from '@/components/BarIconAction.vue';
 
 export default {
-	components: { CardMessage },
+	components: { CardMessage, BarIconAction },
 	data() { return {
 	}},
 	computed: {
