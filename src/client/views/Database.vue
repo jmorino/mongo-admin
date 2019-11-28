@@ -2,7 +2,7 @@
 <div>
 	<!-- <collection-list :db="db" /> -->
 	<router-view name="menu" />
-	<router-view />
+	<router-view class="fill-height" />
 </div>
 </template>
 
