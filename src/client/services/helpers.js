@@ -13,12 +13,19 @@ export const parseContentRange = contentRange => {
 
 //=================================================================================================================
 
-export const buildQueryParams = (query, pagination) => {
+export const buildQueryParams = ({ type, content }, pagination) => {
 	const params = new URLSearchParams();
+	
+	// pagination
 	params.append('p', pagination.page);
 	params.append('c', pagination.count);
-
-	if (query.key) { params.append(query.key, query.value) }
+	
+	// query
+	if (type === 'simple' && content) {
+		params.append('key',   content.key);
+		params.append('value', content.value);
+		params.append('type',  content.type);
+	}
 
 	return params;
 };

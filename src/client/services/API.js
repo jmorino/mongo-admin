@@ -30,9 +30,15 @@ export default class API {
 	//=================================================================================================================
 
 	async queryCollectionByID(db, collection, query, pagination) {
+		const isQueryComplex = !!query.content && query.type === 'complex';
 		const params = buildQueryParams(query, pagination);
-		console.log(params.toString())
-		return await this.get(`/api/databases/${db}/collections/${collection}/documents`, params);
+
+		if (isQueryComplex) {
+			return await this.post(`/api/databases/${db}/collections/${collection}/query`, query.content, params);
+		}
+		else {
+			return await this.get(`/api/databases/${db}/collections/${collection}/documents`, params);
+		}
 	};
 	
 	//=================================================================================================================
@@ -48,6 +54,7 @@ export default class API {
 
 	// aliases
 	get(path, params) { return this.request(path, 'get', null, params) }
+	post(path, body, params) { return this.request(path, 'post', body, params) }
 
 
 	async request(path, method = 'get', body = null, params = null) {
