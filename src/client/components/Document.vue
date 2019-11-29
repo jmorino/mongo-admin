@@ -15,7 +15,7 @@
 				<v-progress-linear indeterminate :active="loading" height="2" />
 				<card-message v-if="loading" text="Loading document..." />
 				<v-card-text class="pa-0 flex-grow-1" v-else>
-					<vue-codemirror ref="editor" :options="options" :value="document" @input="updateDocument" />
+					<vue-codemirror ref="editor" :value="document" @input="updateDocument" />
 				</v-card-text>
 			</v-card>
 		</v-col>
@@ -41,15 +41,6 @@ export default {
 	data() { return {
 		height: null,
 		dlgConfirmVisible: false,
-		options: {
-			lineNumbers: true,
-			fixedGutter: true,
-			showCursorWhenSelecting: true,
-			tabSize: 2,
-			indentUnit: 2,
-			mode: { name: 'javascript', json: true },
-			theme: 'eclipse',
-		},
 	}},
 	computed: {
 		...mapState({

@@ -11,7 +11,15 @@ import CodeMirror from 'codemirror';
 export default {
 	props: {
 		value: { type: String },
-		options: { type: Object, default: () => ({}) },
+		options: { type: Object, default: () => ({
+			lineNumbers: true,
+			fixedGutter: true,
+			showCursorWhenSelecting: true,
+			tabSize: 2,
+			indentUnit: 2,
+			mode: { name: 'javascript', json: true },
+			theme: 'eclipse',
+		})}
 	},
 	data() { return {
 		editor: null,
