@@ -50,7 +50,7 @@ export default {
 			}
 			if (id) {
 				crumbs.push({
-					text: id,
+					text: id === '$new' ? 'new document' : id,
 					exact: true,
 					to: { name: 'document', params: { db, col, id } },
 				});

@@ -113,6 +113,12 @@ export const queryPageByIndex = ({ commit }, index) => { commit('setDocumentsPag
 
 export const loadDocument = async ({ commit }, { dbName, collectionName, id }) => {
 	console.log('[DISPATCH]', 'loadDocument', dbName, collectionName, id);
+
+	// prepare a new document
+	if (id === '$new') {
+		commit('setDocument', {});
+		return;
+	}
 	
 	commit('setDocumentLoading');
 	try {

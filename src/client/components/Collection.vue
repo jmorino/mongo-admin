@@ -94,7 +94,12 @@ export default {
 		fetchQueryResults() {
 			this.$store.dispatch('queryCollection', { dbName: this.db, collectionName: this.col });
 		},
-		createDocument() { console.log('createDocument') },
+		createDocument() {
+			this.$router.push({
+				name: 'document',
+				params: { db: this.db, col: this.col, id: '$new' },
+			});
+		},
 		exportCollection() { console.log('exportCollection') },
 		deleteCollection() { console.log('deleteCollection') },
 	},
