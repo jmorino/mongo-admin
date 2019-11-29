@@ -109,22 +109,25 @@ export const setDocuments = (state, documents) => {
 };
 
 
-export const setDocument = (state, document) => { state.documents.current = JSON.stringify(document, null, 2) };
-export const openDocumentDialog  = state => { state.documents.showDialog = true  };
-export const closeDocumentDialog = state => { state.documents.showDialog = false };
-
-
 export const   setDocumentLoading = state => { state.document.loading = true  };
 export const unsetDocumentLoading = state => { state.document.loading = false };
 export const   setDocumentLoaded  = state => { state.document.loaded  = true  };
 export const unsetDocumentLoaded  = state => { state.document.loaded  = false  };
 
-export const setDocument2 = (state, document) => {
+
+export const setCurrentDocument = (state, document) => {
+	state.document.current = document;
+};
+
+export const setDocument = (state, document) => {
 	if (!document) {
-		state.document.current = '';
+		state.document.original = state.document.current = '';
 	}
 	else {
-		state.document.current = JSON.stringify(document, null, 2);
-		state.document.byID[document._id] = document; // cache result (useful?)
+		state.document.original = state.document.current = JSON.stringify(document, null, 2);
 	}
+};
+
+export const revertDocument = state => {
+	state.document.current = state.document.original;
 };

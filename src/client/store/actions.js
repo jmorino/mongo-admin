@@ -111,13 +111,6 @@ export const queryPrevPage = ({ commit }) => { commit('setDocumentsPrevPage') };
 export const queryNextPage = ({ commit }) => { commit('setDocumentsNextPage') };
 export const queryPageByIndex = ({ commit }, index) => { commit('setDocumentsPageByIndex', index) };
 
-
-export const editDocument = ({ commit }, document) => {
-	console.log('editDocument', document)
-	commit('setDocument', document);
-	commit('openDocumentDialog');
-};
-
 export const loadDocument = async ({ commit }, { dbName, collectionName, id }) => {
 	console.log('[DISPATCH]', 'loadDocument', dbName, collectionName, id);
 	
@@ -125,7 +118,42 @@ export const loadDocument = async ({ commit }, { dbName, collectionName, id }) =
 	try {
 		const { data } = await api.getDocumentByID(dbName, collectionName, id);
 		commit('setDocumentLoaded');
-		commit('setDocument2', data);
+		commit('setDocument', data);
+		commit('unsetDocumentLoading');
+	}
+	catch(err) {
+		// TODO: handle error
+		console.error(err);
+		commit('unsetDocumentLoading');
+	}
+};
+
+export const editDocument = ({ commit }, document) => { commit('setCurrentDocument', document) };
+export const revertDocument = ({ commit }, document) => { commit('revertDocument', document) };
+
+export const saveDocument = async ({ commit, state }, { dbName, collectionName, id = null }) => {
+	const value = state.document.current;
+
+	commit('setDocumentLoading');
+	try {
+		const { data } = await api.saveDocument(dbName, collectionName, id, value);
+		commit('setDocumentLoaded');
+		commit('setDocument', data);
+		commit('unsetDocumentLoading');
+	}
+	catch(err) {
+		// TODO: handle error
+		console.error(err);
+		commit('unsetDocumentLoading');
+	}
+};
+
+export const deleteDocument = async ({ commit }, { dbName, collectionName, id }) => {
+	commit('setDocumentLoading');
+	try {
+		await api.deleteDocument(dbName, collectionName, id);
+		commit('setDocumentLoaded');
+		commit('setDocument', null);
 		commit('unsetDocumentLoading');
 	}
 	catch(err) {

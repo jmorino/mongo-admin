@@ -1,6 +1,6 @@
 <template>
 <div class="vue-codemirror">
-	<div ref="editor"></div>
+	<div ref="editor" class="editor"></div>
 </div>
 </template>
 
@@ -18,11 +18,13 @@ export default {
 	}},
 	methods: {
 		init() {
-			console.log('[CodeMirror]','init');
 			const { value, options } = this;
 			this.editor = CodeMirror(this.$refs['editor'], { ...options, value });
-			this.editor.on('change', editor => { this.$emit('input', editor.getValue()) });
-			this.editor.setSize('auto', 'auto');
+			this.editor.on('changes', editor => { this.$emit('input', editor.getValue()) });
+			this.editor.setSize('auto', '100%');
+		},
+		refresh() {
+			this.editor.setValue(this.value);
 		},
 		destroy() {
 			const wrapper = this.editor.doc.cm.getWrapperElement();
@@ -30,12 +32,9 @@ export default {
 		}
 	},
 	watch: {
-		value() {
-			this.editor.setValue(this.value);
-		},
+		value() { this.refresh() },
 	},
 	mounted() { this.init() },
-	beforeUpdate() { console.log('[CodeMirror]','beforeUpdate') },
 	beforeDestroy() { this.destroy() },
 }
 </script>
@@ -43,6 +42,15 @@ export default {
 
 <style lang="less">
 .vue-codemirror {
-	height: auto;
+	position: relative;
+	height: 100%;
+
+	.editor {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
 }
 </style>

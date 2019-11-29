@@ -94,5 +94,6 @@ export default {
 
 		byID: {},
 		current: '',
+		original: '',
 	},
 };
