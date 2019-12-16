@@ -1,6 +1,6 @@
 'use strict';
 
-import { ensureCollection } from '../../db';
+import { ensureCollection, ObjectID } from '../../db';
 
 
 const fieldSorter = (a,b) => {
@@ -15,7 +15,7 @@ const findAllKeys = (obj, parentKey = null) => {
 	if (Array.isArray(obj)) {
 		return findAllKeys(obj[0], parentKey);
 	}
-	if (typeof obj === 'object' && obj !== null) {
+	if (typeof obj === 'object' && obj !== null && !(obj instanceof ObjectID)) {
 		const keys = Object.keys(obj);
 		const nestedKeys = keys.map(key => findAllKeys(obj[key], key));
 		
