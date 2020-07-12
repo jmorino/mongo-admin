@@ -15,7 +15,7 @@
 				<v-progress-linear indeterminate :active="loading" height="2" />
 				<card-message v-if="loading" text="Loading document..." />
 				<v-card-text class="pa-0 flex-grow-1" v-else>
-					<vue-codemirror ref="editor" :value="document" @input="updateDocument" />
+					<vue-codemirror ref="editor" :value="content" @input="editDocument" />
 				</v-card-text>
 			</v-card>
 		</v-col>
@@ -43,13 +43,15 @@ export default {
 		dlgConfirmVisible: false,
 	}},
 	computed: {
-		...mapState({
-			loading(state)  { return state.document.loading },
-			document(state) { return state.document.original },
-		}),
-		...mapGetters(['hasDocumentChanged']),
+		// ...mapState({
+		// 	loading(state)  { return state.document.loading },
+		// 	document(state) { return state.document.original },
+		// }),
+		...mapGetters('document', ['loading','error','content','hasDocumentChanged']),
 	},
 	methods: {
+		...mapMutations('document', ['setID']),
+		...mapActions('document', ['loadDocument','editDocument','revertDocument','saveDocument','deleteDocument']),
 		resize() {
 			this.height = window.innerHeight - 48;
 		},
@@ -59,33 +61,36 @@ export default {
 				params: { db: this.db, col: this.col },
 			});
 		},
-		loadDocument() {
-			this.$store.dispatch('loadDocument', { dbName: this.db, collectionName: this.col, id: this.id });
-		},
-		updateDocument(value) {
-			this.$store.dispatch('editDocument', value);
+		init() {
+			this.loadDocument({ dbName: this.db, collectionName: this.col, id: this.id });
 		},
 		remove() {
 			this.$refs['confirm-delete'].open();
 		},
 		async removeConfirmed() {
-			await this.$store.dispatch('deleteDocument', { dbName: this.db, collectionName: this.col, id: this.id });
+			await this.deleteDocument({ dbName: this.db, collectionName: this.col, id: this.id });
 			this.navback();
 		},
 		revert() {
-			this.$store.dispatch('revertDocument');
+			this.revertDocument();
 			this.$refs['editor'].refresh();
 		},
-		save() {
-			this.$store.dispatch('saveDocument', { dbName: this.db, collectionName: this.col, id: this.id });
+		async save() {
+			const id = await this.saveDocument();
+			
+			// replace URL with new document ID
+			if (id !== this.id) {
+				const { db, col } = this;
+				this.$router.replace({ name: 'document', params: { db, col, id }});
+			}
 		},
 	},
 	watch: {
-		id() { this.loadDocument() },
+		$route() { this.init() },
 	},
-	mounted() {
+	created() {
 		this.resize();
-		this.loadDocument();
+		this.init();
 	},
 }
 </script>

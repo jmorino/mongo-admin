@@ -12,7 +12,10 @@
 			<v-row>
 				<v-col v-for="db in dbs" :key="db.name" cols="12" sm="6" md="4" lg="3">
 					<v-card :to="dbPageURL(db.name)">
-						<v-card-title><h5>{{ db.name }}</h5></v-card-title>
+						<v-card-title>
+							<v-icon class="me-2">mdi-database</v-icon>
+							<h5>{{ db.name }}</h5>
+						</v-card-title>
 						<v-divider />
 						<v-list dense class="body-2">
 							<v-list-item>
@@ -34,24 +37,22 @@
 
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import { size } from '../formatters';
 
 export default {
 	data() { return {
 	}},
-	computed: mapState({
-		loading(state) { return state.databases.loading },
-		dbs(state) { return state.databases.all },
-	}),
+	computed: mapGetters('databases', ['loading','error','dbs']),
 	filters: { size },
 	methods: {
 		dbPageURL(dbName) {
 			return { name: 'database-overview', params: { db: dbName } };
 		},
+		...mapActions('databases', ['loadDatabases']),
 	},
 	created() {
-		this.$store.dispatch('loadDatabases');
+		this.loadDatabases();
 	},
 }
 </script>

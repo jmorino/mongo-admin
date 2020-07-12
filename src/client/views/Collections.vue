@@ -30,7 +30,7 @@
 
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import CardMessage from '@/components/CardMessage.vue';
 
 export default {
@@ -38,17 +38,20 @@ export default {
 		db: String,
 	},
 	components: { CardMessage },
-	computed: mapState({
-		loading(state) { return state.collections.loading },
-		collections(state) { return state.collections.all },
-	}),
+	computed: mapGetters('collections', ['loading','collections']),
 	methods: {
+		...mapActions('collections', ['loadCollections']),
 		collectionPageURL(collectionName) {
 			return { name: 'collection-overview', params: { col: collectionName } };
 		},
 	},
+	watch: {
+		db() {
+			this.loadCollections({ dbName: this.db });
+		}
+	},
 	mounted() {
-		this.$store.dispatch('loadCollections', this.db);
+		this.loadCollections({ dbName: this.db });
 	},
 }
 </script>

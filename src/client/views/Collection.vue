@@ -27,7 +27,7 @@
 				<v-tab>Stats</v-tab>
 
 				<v-tab-item :transition="false" :reverse-transition="false">
-					<document-list :db="db" :col="col" @clear="resetQuery" @submit="runQuery" @previous="fetchPreviousPage" @next="fetchNextPage" @goto="fetchOnePage" />
+					<document-list :db="db" :col="col" @clear="resetQuery" @submit="submitQuery" @previous="loadPreviousPage" @next="loadNextPage" @goto="loadPageByDocumentIndex" />
 				</v-tab-item>
 				<v-tab-item :transition="false" :reverse-transition="false">
 					<index-list />
@@ -44,7 +44,7 @@
 
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import { size } from '../formatters';
 import CardMessage from '@/components/CardMessage.vue';
 import IndexList from '@/components/IndexList.vue';
@@ -60,39 +60,34 @@ export default {
 	components: { CardMessage, CollectionActionsBtn, DocumentList, IndexList, CollectionStats },
 	data() { return {
 	}},
-	computed: mapState({
-		error(state) { return state.collection.loadError },
-		loading(state) { return state.collection.loading },
-		collection(state) { return state.collection.current },
-	}),
-	// filters: { size },
+	computed: {
+		...mapGetters('collection', ['loading','error']),
+		...mapGetters('documents', {
+			'currentDB': 'db',
+			'currentCollection': 'collection',
+		}),
+	},
 	methods: {
+		...mapActions('collection', ['loadCollection']),
+		...mapActions('documents', [
+			'setNamespace',
+			'loadDocuments',
+			'loadPageByDocumentIndex',
+			'loadPreviousPage',
+			'loadNextPage',
+			'submitQuery',
+			'resetQuery',
+		]),
+		...mapMutations('documents', ['setDB','setCollection']),
 		async fetchCollection() {
-			await this.$store.dispatch('loadCollection', { dbName: this.db, collectionName: this.col });
-			this.fetchQueryResults();
-		},
-		resetQuery() {
-			this.$store.dispatch('clearQuery');
-			this.fetchQueryResults();
-		},
-		runQuery() {
-			this.$store.dispatch('submitQuery');
-			this.fetchQueryResults();
-		},
-		fetchOnePage(index) {
-			this.$store.dispatch('queryPageByIndex', index);
-			this.fetchQueryResults();
-		},
-		fetchPreviousPage() {
-			this.$store.dispatch('queryPrevPage');
-			this.fetchQueryResults();
-		},
-		fetchNextPage() {
-			this.$store.dispatch('queryNextPage');
-			this.fetchQueryResults();
-		},
-		fetchQueryResults() {
-			this.$store.dispatch('queryCollection', { dbName: this.db, collectionName: this.col });
+			await this.loadCollection({ dbName: this.db, collectionName: this.col });
+			
+			// const isSameCollection = this.db === this.currentDB && this.col === this.currentCollection;
+			// if (!isSameCollection) {
+				this.setDB(this.db);
+				this.setCollection(this.col);
+				this.resetQuery();
+			// }
 		},
 		createDocument() {
 			this.$router.push({
@@ -104,12 +99,11 @@ export default {
 		deleteCollection() { console.log('deleteCollection') },
 	},
 	watch: {
-		col() {
-			this.$store.dispatch('clearQuery');
+		$route() {
 			this.fetchCollection();
 		},
 	},
-	mounted() {
+	created() {
 		this.fetchCollection();
 	},
 }

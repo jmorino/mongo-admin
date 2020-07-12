@@ -1,40 +1,28 @@
 <template>
 <div>
-	<!-- <collection-list :db="db" /> -->
-	<router-view name="menu" />
-	<router-view class="fill-height" />
+	<collections :db="db" />
+	<router-view />
 </div>
 </template>
 
 
 <script>
-import { mapState } from 'vuex';
-import CollectionList from '@/components/CollectionList.vue';
-import DBStats from '@/components/DBStats.vue';
-import Collection from '@/components/Collection.vue';
+import { mapActions } from 'vuex';
+import Collections from '@/views/Collections.vue';
 
 export default {
 	props: {
 		db: String,
 	},
-	components: {
-		'collection-list': CollectionList,
-		'db-stats': DBStats,
-		'collection': Collection,
-	},
-	data() { return {
-	}},
-	computed: mapState({
-		loading(state)  { return state.database.loading },
-		database(state)  { return state.database.current },
-	}),
-	methods: {
-		dbPageURL(dbName) {
-			return { name: 'database-overview', params: { db: dbName } };
+	components: { Collections },
+	methods: mapActions('database', ['loadDatabase']),
+	watch: {
+		db() {
+			this.loadDatabase({ dbName: this.db });
 		},
 	},
-	// mounted() {
-	// 	this.$store.dispatch('loadDatabase', this.db);
-	// },
+	created() {
+		this.loadDatabase({ dbName: this.db });
+	},
 }
 </script>
