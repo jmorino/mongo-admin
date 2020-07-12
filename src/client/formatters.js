@@ -8,3 +8,9 @@ export const size = size => {
 
 	return `${value} ${unit}`;
 };
+
+//=================================================================================================================
+
+export const flattenArray = arr => {
+	return arr.map(({ key, value }) => `${key}: ${value}`).join(', ');
+};
