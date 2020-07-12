@@ -1,17 +1,16 @@
 <template>
-<v-form autocomplete="off" @submit.stop="submit">
+<v-form autocomplete="off" @submit.prevent="submit">
 	<v-card>
 		<v-toolbar dense flat color="grey lighten-2">
 			<v-spacer />
-			<template v-if="hasQuery">
+			<template v-if="queryIsActive">
 				<v-btn text @click="$emit('clear')">Clear</v-btn>
 				<v-divider vertical />
 			</template>
-			<v-btn text :disabled="!isValid" type="submit">
+			<v-btn text :disabled="!!queryErrors" type="submit">
 				<v-icon color="primary">mdi-flash</v-icon>Run query
 			</v-btn>
 		</v-toolbar>
-
 		<v-tabs vertical background-color="grey lighten-2" v-model="queryType">
 			<v-tab key="simple">Simple</v-tab>
 			<v-tab key="complex">Complex</v-tab>
@@ -20,13 +19,13 @@
 				<v-container fluid>
 					<v-row>
 						<v-col>
-							<v-combobox hide-details dense outlined label="Key" v-model="key" :items="fields" />
+							<v-combobox hide-details dense outlined label="Key" v-model="key" :items="fields" :rules="rules.key" />
 						</v-col>
 						<v-col>
-							<v-text-field hide-details dense outlined label="Value" rows="5" v-model="value" />
+							<v-text-field hide-details dense outlined label="Value" rows="5" v-model="value" :rules="rules.value" />
 						</v-col>
 						<v-col>
-							<v-select hide-details dense outlined label="Value type" :items="types" v-model="type" />
+							<v-select hide-details dense outlined label="Value type" :items="queryDraft.types" v-model="type" />
 						</v-col>
 					</v-row>
 				</v-container>
@@ -35,10 +34,7 @@
 				<v-container fluid>
 					<v-row>
 						<v-col>
-							<v-textarea hide-details outlined no-resize label="Query" rows="5" v-model="query" />
-						</v-col>
-						<v-col>
-							<v-textarea hide-details outlined no-resize label="Projection" rows="5" v-model="projection" />
+							<v-textarea hide-details outlined no-resize label="Query" rows="5" v-model="selector" :rules="rules.selector" />
 						</v-col>
 					</v-row>
 				</v-container>
@@ -50,52 +46,43 @@
 
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 export default {
 	data() { return {
-		isValid: true,
+		rules: {
+			key:      [() => this.queryErrors && this.queryErrors.key      || true],
+			value:    [() => this.queryErrors && this.queryErrors.value    || true],
+			selector: [() => this.queryErrors && this.queryErrors.selector || true],
+		}
 	}},
 	computed: {
-		...mapState({
-			hasQuery(state) { return !!state.documents.currentQuery.content },
-			types(state)    { return state.documents.draftQuery.types },
-			fields(state)   { return state.collection.current && state.collection.current.fields || [] },
-		}),
+		...mapGetters('collection', ['fields']),
+		...mapGetters('documents', ['queryIsActive','queryDraft','queryErrors']),
 		queryType: {
-			get() { return this.$store.state.documents.draftQuery.queryType === 'simple' ? 0 : 1 },
-			set(value) { this.$store.dispatch('setDraftQueryProperty', { key: 'queryType', value: value === 0 ? 'simple': 'complex' }) },
+			get() { return this.queryDraft.queryType === 'simple' ? 0 : 1 },
+			set(value) { this.setDraftQueryProperty({ key: 'queryType', value: value === 0 ? 'simple': 'complex' }) },
 		},
 		key: {
-			get() { return this.$store.state.documents.draftQuery.key },
-			set(value) { this.$store.dispatch('setDraftQueryProperty', { key: 'key', value }) },
+			get() { return this.queryDraft.key },
+			set(value) { this.setDraftQueryProperty({ key: 'key', value }) },
 		},
 		value: {
-			get() { return this.$store.state.documents.draftQuery.value },
-			set(value) { this.$store.dispatch('setDraftQueryProperty', { key: 'value', value }) },
+			get() { return this.queryDraft.value },
+			set(value) { this.setDraftQueryProperty({ key: 'value', value }) },
 		},
 		type: {
-			get() { return this.$store.state.documents.draftQuery.type },
-			set(value) { this.$store.dispatch('setDraftQueryProperty', { key: 'type', value }) },
+			get() { return this.queryDraft.type },
+			set(value) { this.setDraftQueryProperty({ key: 'type', value }) },
 		},
-		query: {
-			get() { return this.$store.state.documents.draftQuery.query },
-			set(value) { this.$store.dispatch('setDraftQueryProperty', { key: 'query', value }) },
+		selector: {
+			get() { return this.queryDraft.selector },
+			set(value) { this.setDraftQueryProperty({ key: 'selector', value }) },
 		},
-		projection: {
-			get() { return this.$store.state.documents.draftQuery.projection },
-			set(value) { this.$store.dispatch('setDraftQueryProperty', { key: 'projection', value }) },
-		},
-		// hasQuery() {
-		// 	return this.queryType === 0
-		// 		? !!(this.key || this.value)
-		// 		: !!(this.query || this.projection);
-		// },
 	},
 	methods: {
-		validate() {
-		},
+		...mapActions('documents', ['setDraftQueryProperty']),
 		submit() {
-			this.validate();
+			if (this.queryErrors) { return }
 			this.$emit('submit')
 		},
 	}

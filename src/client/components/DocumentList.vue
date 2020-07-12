@@ -1,5 +1,5 @@
 <template>
-<v-container>
+<v-container fluid>
 	<v-row>
 		<v-col>
 			<query-form ref="query" @clear="clear" @submit="submit" />
@@ -16,19 +16,18 @@
 						<bar-icon-action icon="mdi-delete" tooltip="Supprimer" @click="deleteSelection" />
 					</template>
 					<v-spacer />
-					<v-subheader v-if="isFiltered">Documents are filtered by query</v-subheader>
+					<v-subheader v-if="queryIsActive">Documents are filtered by query</v-subheader>
 					<bar-pagination :start="start" :end="end" :total="total" @previous="previous" @next="next" @goto="goto" />
 				</v-toolbar>
 				<v-progress-linear indeterminate :active="loading" height="2" />
-
 				<v-data-table
 					show-select
 					hide-default-footer
-					:hide-default-header="!docs.length"
+					:hide-default-header="!documents.length"
 					item-key="_id"
 					:single-expand="false"
 					:headers="headers"
-					:items="docs"
+					:items="documents"
 					v-model="selection">
 
 					<template v-slot:header.data-table-select="{ on, props }">
@@ -57,7 +56,7 @@
 
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import BarPagination from '@/components/BarPagination.vue';
 import BarIconAction from '@/components/BarIconAction.vue';
 import CardMessage from '@/components/CardMessage.vue';
@@ -75,20 +74,13 @@ export default {
 		selection: [],
 	}},
 	computed: {
+		...mapGetters('collection', ['rootFields']),
+		...mapGetters('documents', ['loading','error','documents','page','count','total','queryIsActive']),
 		hasSelection() { return !!this.selection.length },
-		...mapState({
-			loading(state)  { return state.documents.loading },
-			docs(state)     { return state.documents.all },
-			fields(state)   { return state.collection.current && state.collection.current.rootFields || [] },
-			page(state)     { return state.documents.pagination.page },
-			count(state)    { return state.documents.pagination.count },
-			total(state)    { return state.documents.pagination.total },
-			isFiltered(state) { return !!state.documents.currentQuery.content },
-		}),
 		start() { return this.page * this.count },
-		end()   { return this.start + this.docs.length },
+		end()   { return this.start + this.documents.length },
 		headers() {
-			return [{ sortable: false }].concat(this.fields.map(key => ({ text: key, sortable: true, value: key, class: 'no-wrap' })));
+			return [{ sortable: false }].concat(this.rootFields.map(key => ({ text: key, sortable: true, value: key, class: 'no-wrap' })));
 		},
 	},
 	methods: {
