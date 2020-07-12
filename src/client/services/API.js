@@ -1,6 +1,7 @@
 'use strict';
 
 import { parseContentRange, buildQueryParams, buildURL } from './helpers';
+import { formatCollection } from './formatters';
 
 
 export default class API {
@@ -24,7 +25,8 @@ export default class API {
 	//=================================================================================================================
 
 	async getCollectionByID(db, collection) {
-		return await this.get(`/api/databases/${db}/collections/${collection}`);
+		const { data } = await this.get(`/api/databases/${db}/collections/${collection}`);
+		return { data: formatCollection(data) };
 	};
 	
 	//=================================================================================================================
@@ -34,7 +36,7 @@ export default class API {
 		const params = buildQueryParams(query, pagination);
 
 		if (isQueryComplex) {
-			return await this.post(`/api/databases/${db}/collections/${collection}/query`, query.content, params);
+			return await this.post(`/api/databases/${db}/collections/${collection}/_query`, query.content, params);
 		}
 		else {
 			return await this.get(`/api/databases/${db}/collections/${collection}/documents`, params);
@@ -54,7 +56,7 @@ export default class API {
 			return await this.post(`/api/databases/${db}/collections/${collection}/documents`, content);
 		}
 		else {
-			return await this.put(`/api/databases/${db}/collections/${collection}/documents/${id}`, content);
+			return await this.post(`/api/databases/${db}/collections/${collection}/documents/${id}`, content);
 		}
 	};
 	
@@ -70,17 +72,22 @@ export default class API {
 	//=============================================================================
 
 	// aliases
-	get   (path, params)       { return this.request(path, 'get',    null, params) }
+	get   (path,       params) { return this.request(path, 'get',    null, params) }
 	post  (path, body, params) { return this.request(path, 'post',   body, params) }
-	put   (path, body, params) { return this.request(path, 'put',    body, params) }
 	delete(path, body, params) { return this.request(path, 'delete', body, params) }
 
 
 	async request(path, method = 'get', body = null, params = null) {
+		// build url with params
 		const url = buildURL(path, 'http://localhost:3000', params);
 		console.info(`[API] ${method.toUpperCase()} ${url}`, body || '-');
 
-		const response = await fetch(url, { method, body });
+		// set request headers
+		const headers = {};
+		if (body) { headers['Content-Type'] = 'application/json' }
+
+		// send request
+		const response = await fetch(url, { method, headers, body });
 		if (!response.ok) {
 			console.error('response error', response)
 			throw new Error('Request failed');
