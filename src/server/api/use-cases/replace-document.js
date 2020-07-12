@@ -7,11 +7,11 @@ import getDocument from './get-document';
 export default async (dbName, collectionName, _id, data) => {
 	const document = await getDocument(dbName, collectionName, _id);
 	
-	// force _id into new document
-	const doc = { _id: document._id, ...data };
+	// remove _id from data to prevent mutating it (_id is immutable)
+	delete data._id;
 	
 	const collection = await ensureCollection(dbName, collectionName);
-	await collection.replaceOne({ _id: document._id }, doc);
+	await collection.replaceOne({ _id: document._id }, data);
 
-	return doc;
+	return { _id: document._id, ...data };
 };
