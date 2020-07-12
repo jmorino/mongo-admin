@@ -5,10 +5,11 @@ import Router from 'vue-router';
 import Databases from '@/views/Databases.vue';
 import Database from '@/views/Database.vue';
 import DBStats from '@/components/DBStats.vue';
-import CollectionList from '@/components/CollectionList.vue';
-import Collection from '@/components/Collection.vue';
-import Document from '@/components/Document.vue';
+import Collections from '@/views/Collections.vue';
+import Collection from '@/views/Collection.vue';
+import Document from '@/views/Document.vue';
 
+import { store } from './store';
 
 Vue.use(Router);
 
@@ -29,24 +30,57 @@ export const router = new Router({
 				{
 					path: '',
 					name: 'database-overview',
-					// props: true,
-					// component: DBStats,
-					props: { default: true, menu: true },
-					components: {
-						default: DBStats,
-						menu: CollectionList,
-					},
+					props: true,
+					component: DBStats,
+					// props: { default: true, menu: true },
+					// components: {
+					// 	default: DBStats,
+					// 	// menu: Collections,
+					// },
 				},
 				{
 					path: ':col',
 					name: 'collection-overview',
-					// props: true,
-					// component: Collection,
-					props: { default: true, menu: true },
-					components: {
-						default: Collection,
-						menu: CollectionList,
-					},
+					props: true,
+					component: Collection,
+					// props: { default: true, menu: true },
+					// components: {
+					// 	default: Collection,
+					// 	// menu: Collections,
+					// },
+					// children: [
+					// 	{
+					// 		path: '',
+					// 		props: true,
+					// 		component: CollectionLayout,
+					// 		children: [
+					// 			{
+					// 				path: '',
+					// 				name: 'collection-overview',
+					// 				props: true,
+					// 				component: DocumentList,
+					// 			},
+					// 			{
+					// 				path: 'indexes',
+					// 				name: 'collection-indexes',
+					// 				props: true,
+					// 				component: IndexList,
+					// 			},
+					// 			{
+					// 				path: 'stats',
+					// 				name: 'collection-details',
+					// 				props: true,
+					// 				component: CollectionStats,
+					// 			},
+					// 		],
+					// 	},
+					// 	{
+					// 		path: 'document/:id',
+					// 		name: 'document',
+					// 		props: true,
+					// 		component: Document,
+					// 	}
+					// ]
 				},
 				{
 					path: ':col/:id',
@@ -56,7 +90,7 @@ export const router = new Router({
 					props: { default: true, menu: true },
 					components: {
 						default: Document,
-						menu: CollectionList,
+						menu: Collections,
 					},
 				},
 			],
