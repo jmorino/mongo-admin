@@ -15,12 +15,8 @@ export const query = handlePaginatedObject(async ({ params, query, body }) => {
 		'p': { type: SimpleSchema.Integer, optional: true, defaultValue:  0 },
 		'c': { type: SimpleSchema.Integer, optional: true, defaultValue: 10 },
 	});
-	const q = validate(body, {
-		'query': { type: Object, blackbox: true },
-		'projection': { type: Object, blackbox: true },
-	});
 
-	return await getDocuments(params.db, params.collection, paging, q);
+	return await getDocuments(params.db, params.collection, paging, { selection: body });
 });
 
 //=================================================================================================================

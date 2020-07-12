@@ -4,7 +4,7 @@ import { ensureCollection } from '../../db';
 import { validate } from '../../utils/validation';
 
 
-const extractQueryParameters = ({ key, value, type, query, projection }) => {
+const extractQueryParameters = ({ key, value, type, selection, projection = {} }) => {
 	let selector  = {};
 	let projector = {};
 
@@ -12,8 +12,8 @@ const extractQueryParameters = ({ key, value, type, query, projection }) => {
 		const validData = validateSimpleQuery({ key, value, type });
 		selector = { [validData.key]: validData.value };
 	}
-	else if (query || projection) {
-		const validData = validateComplexQuery({ query, projection });
+	else if (selection) {
+		const validData = validateComplexQuery({ selection, projection });
 		selector = validData.query;
 		projector = validData.projection;
 	}
@@ -37,9 +37,9 @@ const validateSimpleQuery = ({ key, value, type }) => {
 	});
 };
 
-const validateComplexQuery = ({ query, projection }) => {
-	return validate({ query, projection }, {
-		'query': { type: Object, blackbox: true },
+const validateComplexQuery = ({ selection, projection }) => {
+	return validate({ selection, projection }, {
+		'selection': { type: Object, blackbox: true },
 		'projection': { type: Object, blackbox: true },
 	});
 };
