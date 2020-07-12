@@ -68,12 +68,16 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: path.resolve(STATIC_PATH, 'index.html'),
 		}),
-		new CopyWebpackPlugin([{
-			from: STATIC_PATH,
-			to: BUILD_PATH,
-			toType: 'dir',
-			ignore: ['.DS_Store']
-		}]),
+		new CopyWebpackPlugin({
+			patterns: [{
+				from: STATIC_PATH,
+				to: BUILD_PATH,
+				toType: 'dir',
+				globOptions: {
+					ignore: ['.DS_Store']
+				},
+			}]
+		}),
 		new VueLoaderPlugin(),
 	],
 
