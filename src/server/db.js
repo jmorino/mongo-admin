@@ -73,8 +73,6 @@ export const connect = async callback => {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		appname: appName,
-		reconnectTries,
-		reconnectInterval,
 	});
 	_db = _client.db(settings.name);
 	
