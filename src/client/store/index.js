@@ -2,17 +2,24 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import state from './state';
-import * as getters from './getters';
-import * as mutations from './mutations';
-import * as actions from './actions';
+
+import * as databases from './databases';
+import * as database from './database';
+import * as collections from './collections';
+import * as collection from './collection';
+import * as documents from './documents';
+import * as document from './document';
 
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-	state,
-	getters,
-	mutations,
-	actions,
+	modules: {
+		databases,
+		database,
+		collections,
+		collection,
+		documents,
+		document,
+	}
 });

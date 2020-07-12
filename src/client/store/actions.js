@@ -6,7 +6,6 @@ import API from '../services/API';
 const api = new API();
 
 export const loadDatabases = async ({ commit, state }) => {
-	console.log('[DISPATCH]', 'loadDatabases');
 	if (state.databases.loaded) { return }
 
 	commit('setDBsLoading');
@@ -27,8 +26,6 @@ export const loadDatabases = async ({ commit, state }) => {
 //=================================================================================================================
 
 export const loadDatabase = async ({ commit }, dbName) => {
-	console.log('[DISPATCH]', 'loadDatabase', dbName);
-	
 	commit('setDBLoading');
 	try {
 		const { data } = await api.getDatabaseByID(dbName);
@@ -46,8 +43,6 @@ export const loadDatabase = async ({ commit }, dbName) => {
 //=================================================================================================================
 
 export const loadCollections = async ({ commit }, dbName) => {
-	console.log('[DISPATCH]', 'loadCollections', dbName);
-
 	commit('setCollectionsLoading');
 	try {
 		const { data } = await api.getCollectionsByDBName(dbName);
@@ -65,8 +60,6 @@ export const loadCollections = async ({ commit }, dbName) => {
 //=================================================================================================================
 
 export const loadCollection = async ({ commit }, { dbName, collectionName }) => {
-	console.log('[DISPATCH]', 'loadCollection', dbName, collectionName);
-
 	commit('setCollectionLoading');
 	try {
 		const { data } = await api.getCollectionByID(dbName, collectionName);
@@ -111,9 +104,9 @@ export const queryPrevPage = ({ commit }) => { commit('setDocumentsPrevPage') };
 export const queryNextPage = ({ commit }) => { commit('setDocumentsNextPage') };
 export const queryPageByIndex = ({ commit }, index) => { commit('setDocumentsPageByIndex', index) };
 
-export const loadDocument = async ({ commit }, { dbName, collectionName, id }) => {
-	console.log('[DISPATCH]', 'loadDocument', dbName, collectionName, id);
+//=================================================================================================================
 
+export const loadDocument = async ({ commit }, { dbName, collectionName, id }) => {
 	// prepare a new document
 	if (id === '$new') {
 		commit('setDocument', {});
@@ -134,8 +127,12 @@ export const loadDocument = async ({ commit }, { dbName, collectionName, id }) =
 	}
 };
 
+//=================================================================================================================
+
 export const editDocument = ({ commit }, document) => { commit('setCurrentDocument', document) };
 export const revertDocument = ({ commit }, document) => { commit('revertDocument', document) };
+
+//=================================================================================================================
 
 export const saveDocument = async ({ commit, state }, { dbName, collectionName, id = null }) => {
 	const value = state.document.current;
@@ -153,6 +150,8 @@ export const saveDocument = async ({ commit, state }, { dbName, collectionName, 
 		commit('unsetDocumentLoading');
 	}
 };
+
+//=================================================================================================================
 
 export const deleteDocument = async ({ commit }, { dbName, collectionName, id }) => {
 	commit('setDocumentLoading');
