@@ -45,7 +45,7 @@
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
     "roboto-fontface": "^0.10.0",
-    "simpl-schema": "^1.8.0",
+    "simpl-schema": "^1.10.2",
     "vue": "^2.6.11",
     "vue-codemirror": "^4.0.6",
     "vue-router": "^3.3.4",
